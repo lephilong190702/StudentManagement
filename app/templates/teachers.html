@@ -1,0 +1,50 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Danh sách giảng viên{% endblock %}
+
+{% block content %}
+<section class="banner-area">
+    <div class="container">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-lg-12 banner-right">
+                <h1 class="text-white">
+                    ĐỘI NGŨ GIÁO VIÊN
+                </h1>
+                <p>
+
+                </p>
+                <div class="link-nav">
+						<span class="box">
+							<a href="{{ url_for('index') }}">Trang chủ </a>
+							<i class="lnr lnr-arrow-right"></i>
+							<a href="#"></a>
+						</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="container">
+    <h3 class="mb-30">Đội ngũ giáo viên</h3>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th class="table-light">STT</th>
+            <th class="table-light">Họ và tên đệm</th>
+            <th class="table-light">Tên</th>
+            <th class="table-light">Ngày sinh</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for s in students %}
+        <tr>
+            <th scope="row"></th>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        {% endfor%}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
