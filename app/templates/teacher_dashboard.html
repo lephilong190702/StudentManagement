@@ -1,0 +1,50 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Bảng Điểm{% endblock %}
+
+{% block content %}
+<section class="banner-area">
+    <div class="container">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-lg-12 banner-right">
+                <h1 class="text-white">
+                    QUẢN LÝ ĐIỂM
+                </h1>
+                <p>
+
+                </p>
+                <div class="link-nav">
+						<span class="box">
+							<a href="{{ url_for('index') }}">Trang chủ </a>
+							<i class="lnr lnr-arrow-right"></i>
+							<a href="#">Điểm </a>
+						</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="container">
+    <h3 class="mb-30">Danh sách các lớp và môn học</h3>
+    <section>
+        <div class="row">
+            {% for class_subject in classes_subjects %}
+            <div class="col-xs-12 col-md-3" style="padding:7px; ">
+                <div class="card">
+                    <img class="card-img-top" src="{{ url_for('static', filename='images/default_avatar.jpg') }}"
+                         alt="Card image">
+                    <div class="card-body">
+                        <h4 class="card-title">{{ class_subject.class_name }}</h4>
+                        <p class="card-text">{{ class_subject.subject_name }}</p>
+                        <a href="{{ url_for('view_scores', class_id=class_subject.class_id, subject_id=class_subject.subject_id, semester_id=class_subject.semester_id) }}"
+                           class="btn btn-info">Xem điểm</a>
+                        <a href="{{ url_for('input_scores', class_id=class_subject.class_id, subject_id=class_subject.subject_id, semester_id=class_subject.semester_id) }}"
+                           class="btn btn-danger">Nhập điểm</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor%}
+        </div>
+    </section>
+</div>
+{% endblock %}

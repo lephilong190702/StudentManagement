@@ -1,6 +1,6 @@
 {% extends 'layout/base.html' %}
 
-{% block title %}Danh sách giảng viên{% endblock %}
+{% block title %}Giáo Viên{% endblock %}
 
 {% block content %}
 <section class="banner-area">
@@ -17,7 +17,7 @@
 						<span class="box">
 							<a href="{{ url_for('index') }}">Trang chủ </a>
 							<i class="lnr lnr-arrow-right"></i>
-							<a href="#"></a>
+							<a href="{{ url_for('load_teachers') }}">Giáo viên</a>
 						</span>
                 </div>
             </div>
@@ -26,25 +26,25 @@
 </section>
 <div class="container">
     <h3 class="mb-30">Đội ngũ giáo viên</h3>
-    <table class="table table-bordered">
-        <thead>
-        <tr>
-            <th class="table-light">STT</th>
-            <th class="table-light">Họ và tên đệm</th>
-            <th class="table-light">Tên</th>
-            <th class="table-light">Ngày sinh</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for s in students %}
-        <tr>
-            <th scope="row"></th>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
+    <section>
+<!--    <ul class="pagination mt-1">-->
+<!--        <li class="page-item"><a class="page-link" href="/?page=1">1</a></li>-->
+<!--        <li class="page-item"><a class="page-link" href="/?page=2">2</a></li>-->
+<!--    </ul>-->
+    <div class="row">
+        {% for t in teachers %}
+        <div class="col-xs-12 col-md-3" style="padding:7px; ">
+            <div class="card">
+                <img class="card-img-top" src="{{ url_for('static', filename='images/default_avatar.jpg') }}" alt="Card image">
+                <div class="card-body">
+                    <h4 class="card-title">{{ t.firstname }} {{ t.lastname }}</h4>
+                    <p class="card-text">{{ t.degree }}</p>
+                    <a href="#" class="btn btn-info">Xem chi tiết</a>
+                </div>
+            </div>
+        </div>
         {% endfor%}
-        </tbody>
-    </table>
+    </div>
+</section>
 </div>
 {% endblock %}

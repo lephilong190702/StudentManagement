@@ -1,0 +1,72 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Bảng Điểm{% endblock %}
+
+{% block content %}
+<section class="banner-area">
+    <div class="container">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-lg-12 banner-right">
+                <h1 class="text-white">
+                    QUẢN LÝ ĐIỂM
+                </h1>
+                <p>
+
+                </p>
+                <div class="link-nav">
+						<span class="box">
+							<a href="{{ url_for('index') }}">Trang chủ </a>
+							<i class="lnr lnr-arrow-right"></i>
+							<a href="#">Điểm </a>
+						</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    <h3 class="m-4">Nhập điểm cho học sinh</h3>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="alert alert-warning">
+        {{ messages[0] }}
+    </div>
+    {% endif %}
+    {% endwith %}
+    <form method="POST" class="container">
+        <div class="form-group row">
+            <label for="student_id" class="col-sm-2 col-form-label">Học sinh:</label>
+            <div class="col-sm-10">
+                <select name="student_id" id="student_id" class="form-control">
+                    {% for student in students %}
+                    <option value="{{ student.id }}">{{ student.firstname }} {{ student.lastname }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="score_type" class="col-sm-2 col-form-label">Loại điểm nhập:</label>
+            <div class="col-sm-10">
+                <select id="score_type" name="score_type" class="form-control">
+                    <option value="15 phút">15 phút</option>
+                    <option value="1 tiết">1 tiết</option>
+                    <option value="Điểm thi">Điểm thi</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="score_value" class="col-sm-2 col-form-label">Điểm:</label>
+            <div class="col-sm-10">
+                <input type="number" id="score_value" name="score_value" class="form-control">
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-10 offset-sm-2">
+                <input type="submit" value="Submit" class="genric-btn success radius mt-2">
+            </div>
+        </div>
+    </form>
+
+</div>
+{% endblock %}

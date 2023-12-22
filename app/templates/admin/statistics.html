@@ -1,6 +1,86 @@
 {% extends 'admin/master.html' %}
 
 {% block body %}
-<h1 class="text-center text-info">THỐNG KÊ BÁO CÁO</h1>
+
+<div class="container">
+    <h1 class="text-center text-info">THỐNG KÊ BÁO CÁO</h1>
+    <form method="POST">
+        <div class="form-group">
+            <label for="subject_id">Chọn môn học:</label>
+            <select id="subject_id" name="subject_id" class="form-control">
+                {% for subject in subjects %}
+                    <option value="{{ subject.id }}">{{ subject.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="semester_id">Chọn học kỳ:</label>
+            <select id="semester_id" name="semester_id" class="form-control">
+                {% for semester in semesters %}
+                    <option value="{{ semester.id }}">{{ semester.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Thống kê</button>
+    </form>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th class="table-light">Lớp</th>
+            <th class="table-light">Môn học</th>
+            <th class="table-light">Học kỳ</th>
+            <th class="table-light">Sĩ số</th>
+            <th class="table-light">Số lượng đạt</th>
+            <th class="table-light">Tỷ lệ</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for s in statistics %}
+        <tr>
+            <td>{{ s['class'] }}</td>
+            <td>{{ s['subject'] }}</td>
+            <td>{{ s['semester'] }}</td>
+            <td>{{ s['num_students'] }}</td>
+            <td>{{ s['num_passed'] }}</td>
+            <td>{{ s['pass_rate'] }} %</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="col-md-6 col-xs-12">
+    <canvas id="myChart"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    let labels = [], info = []
+
+    {% for s in statistics %}
+        labels.push('{{ s['class'] }}')
+        info.push({{ s['pass_rate'] }})
+    {% endfor %}
+    window.onload = function() {
+        const ctx = document.getElementById('myChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+              labels: labels,
+              datasets: [{
+                label: 'Tỷ lệ đạt là',
+                data: info,
+                borderWidth: 1
+              }]
+            },
+            options: {
+              scales: {
+                y: {
+                  beginAtZero: true
+                }
+              }
+            }
+          });
+        }
+</script>
 
 {% endblock %}

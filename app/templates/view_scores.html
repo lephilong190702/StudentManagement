@@ -17,7 +17,7 @@
 						<span class="box">
 							<a href="{{ url_for('index') }}">Trang chủ </a>
 							<i class="lnr lnr-arrow-right"></i>
-							<a href="#">Lớp {{class_info.name}} </a>
+							<a href="#">Lớp </a>
 						</span>
                 </div>
             </div>
@@ -25,25 +25,35 @@
     </div>
 </section>
 <div class="container">
-    <h3 class="mb-30">Danh sách học sinh lớp {{class_info.name}}</h3>
+    <h3 class="mb-30">Danh sách học sinh lớp </h3>
     <table class="table table-bordered">
         <thead>
         <tr>
             <th class="table-light">STT</th>
             <th class="table-light">Họ và tên đệm</th>
             <th class="table-light">Tên</th>
-            <th class="table-light">Ngày sinh</th>
+            <th class="table-light">Điểm 15 phút</th>
+            <th class="table-light">Điểm 1 tiết</th>
+            <th class="table-light">Điểm thi</th>
+            <th class="table-light">Điểm trung bình</th>
+            <th class="table-light">Học kì</th>
+            <th class="table-light">Kết quả</th>
         </tr>
         </thead>
         <tbody>
-        {% for s in students %}
+        {% for s in scores %}
         <tr>
-            <th scope="row">{{s.id}}</th>
-            <td>{{s.firstname}}</td>
-            <td>{{s.lastname}}</td>
-            <td>{{s.dob}}</td>
+            <td>{{ loop.index }}</td>
+            <td>{{ s.firstname }}</td>
+            <td>{{ s.lastname }}</td>
+            <td>{{ s['15 phút']|join(', ') }}</td>
+            <td>{{ s['1 tiết']|join(', ') }}</td>
+            <td>{{ s['Điểm thi']|join(', ') }}</td>
+            <td>{{ s.average }}</td>
+            <td>{{ s.semester }}</td>
+            <td>{{ 'Đạt' if s.is_passing else 'Không đạt' }}</td>
         </tr>
-        {% endfor%}
+        {% endfor %}
         </tbody>
     </table>
 </div>

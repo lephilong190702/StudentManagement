@@ -1,10 +1,135 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+<!--<nav class="navbar navbar-expand-sm bg-dark navbar-dark">-->
+<!--    <div class="container-fluid">-->
+<!--        <a class="navbar-brand" href="/">QUẢN LÝ HỌC SINH</a>-->
+<!--        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">-->
+<!--            <span class="navbar-toggler-icon"></span>-->
+<!--        </button>-->
+<!--        <div class="collapse navbar-collapse" id="collapsibleNavbar">-->
+<!--            <ul class="navbar-nav me-auto">-->
+<!--                <li class="nav-item">-->
+<!--                    <a class="nav-link" href="/">Trang chủ</a>-->
+<!--                </li>-->
+<!--                {% for c in classes %}-->
+<!--                <li class="nav-item">-->
+<!--                    <a class="nav-link" href="/?class_id={{c.id}}">{{ c.name }}</a>-->
+<!--                </li>-->
+<!--                {% endfor %}-->
+<!--{% if current_user.is_authenticated %}-->
+<!--<li class="nav-item">-->
+<!--    <a class="nav-link text-danger" href="{{ url_for('index') }}">-->
+<!--        {% if current_user.avatar %}-->
+<!--        <img src="{{ current_user.avatar }}" class="rounded-circle" width="25" alt="{{ current_user.name }}"/>-->
+<!--        {% else %}-->
+<!--        <img src="{{ url_for('static', filename='images/default_avatar.jpg') }}" class="rounded-circle" width="25"-->
+<!--             alt="{{ current_user.name }}"/>-->
+<!--        {% endif %}-->
+<!--        {{ current_user.username }}-->
+<!--    </a>-->
+<!--</li>-->
+<!--<li class="nav-item">-->
+<!--    <a class="nav-link text-success" href="{{ url_for('user_logout') }}">Đăng xuất</a>-->
+<!--</li>-->
+<!--{% else %}-->
+<!--<li class="nav-item">-->
+<!--    <a class="nav-link text-danger" href="{{ url_for('user_register') }}">Đăng ký</a>-->
+<!--</li>-->
+<!--<li class="nav-item">-->
+<!--    <a class="nav-link text-success" href="{{ url_for('user_login') }}">Đăng nhập</a>-->
+<!--</li>-->
+<!--{% endif %}-->
+<!--            </ul>-->
+<!--            <form class="d-flex">-->
+<!--                <input class="form-control me-2" type="text" name="kw" placeholder="Search">-->
+<!--                <button class="btn btn-primary" type="button">Search</button>-->
+<!--            </form>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</nav>-->
+<header class="default-header">
+    <nav class="navbar navbar-expand-lg  navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <img src="{{ url_for('static', filename='img/logo.png') }}" alt=""/>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="lnr lnr-menu"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-end align-items-center" id="navbarSupportedContent">
+                <ul class="navbar-nav">
+                    <li><a href="{{ url_for('index') }}">Trang Chủ</a></li>
+                    <li><a href="{{ url_for('about_page') }}">Giới Thiệu</a></li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                            Danh Sách Lớp Học
+                        </a>
+                        <ul class="dropdown-menu">
+                            {% for g in grades %}
+                            <li class="dropdown-submenu" style="position: relative;">
+                                <a class="dropdown-item dropdown-toggle" href="/?grade_id={{g.id}}">{{ g.name }}</a>
+                                <ul class="dropdown-menu" style="top: 0; left: 90%; margin-top: -1px; display: none;">
+                                    {% for c in get_classes_by_grade(g.id) %}
+                                    <li><a class="dropdown-item" href="{{ url_for('class_detail', class_id = c.id) }}">{{ c.name }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    <li><a href="{{ url_for('load_teachers') }}">Đội Ngũ Giáo Viên</a></li>
+                    {% if current_user.is_authenticated %}
+                    <li>
+                        <a href="{{ url_for('manage_scores') }}">Quản Lý Điểm</a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('index') }}">
+                            {% if current_user.avatar %}
+                            <img src="{{ current_user.avatar }}" class="rounded-circle" width="25"
+                                 alt="{{ current_user.name }}"/>
+                            {% else %}
+                            <img src="{{ url_for('static', filename='images/default_avatar.jpg') }}"
+                                 class="rounded-circle" width="25" alt="{{ current_user.name }}"/>
+                            {% endif %}
+                            {{ current_user.username }}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('user_logout') }}">Đăng Xuất</a>
+                    </li>
+                    {% else %}
+                    <li><a href="{{ url_for('user_register') }}">Đăng Ký</a></li>
+                    <li><a href="{{ url_for('user_login') }}">Đăng Nhập</a></li>
+                    {% endif %}
+                    <li>
+                        <button class="search">
+                            <span class="lnr lnr-magnifier" id="search"></span>
+                        </button>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+    </nav>
+    <div class="search-input" id="search-input-box">
+        <div class="container">
+            <form class="d-flex justify-content-between">
+                <input type="text" class="form-control" id="search-input" placeholder="Search Here"/>
+                <button type="submit" class="btn"></button>
+                <span class="lnr lnr-cross" id="close-search" title="Close Search"></span>
+            </form>
+        </div>
+    </div>
+</header>
+
+<script>
+    document.querySelectorAll('.dropdown-submenu').forEach(function(element) {
+        element.addEventListener('mouseover', function() {
+            this.querySelector('.dropdown-menu').style.display = 'block';
+        });
+
+        element.addEventListener('mouseout', function() {
+            this.querySelector('.dropdown-menu').style.display = 'none';
+        });
+    });
+</script>
