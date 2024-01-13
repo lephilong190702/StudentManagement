@@ -40,18 +40,18 @@
             <div class="col-sm-10">
                 <select name="student_id" id="student_id" class="form-control">
                     {% for student in students %}
-                    <option value="{{ student.id }}">{{ student.firstname }} {{ student.lastname }}</option>
+                    <option value="{{ student.id }}">{{ student.profile.firstname }} {{ student.profile.lastname }}</option>
                     {% endfor %}
                 </select>
             </div>
         </div>
         <div class="form-group row">
-            <label for="score_type" class="col-sm-2 col-form-label">Loại điểm nhập:</label>
+            <label for="type_id" class="col-sm-2 col-form-label">Loại điểm nhập:</label>
             <div class="col-sm-10">
-                <select id="score_type" name="score_type" class="form-control">
-                    <option value="15 phút">15 phút</option>
-                    <option value="1 tiết">1 tiết</option>
-                    <option value="Điểm thi">Điểm thi</option>
+                <select id="type_id" name="type_id" class="form-control">
+                    {% for score_type in score_types %}
+                    <option value="{{ score_type.id }}">{{ score_type.name }}</option>
+                    {% endfor %}
                 </select>
             </div>
         </div>
@@ -67,6 +67,6 @@
             </div>
         </div>
     </form>
-
 </div>
+
 {% endblock %}

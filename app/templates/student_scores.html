@@ -1,0 +1,55 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Xem điểm{% endblock %}
+
+{% block content %}
+<section class="banner-area">
+    <div class="container">
+			<div class="row justify-content-center align-items-center">
+				<div class="col-lg-12 banner-right">
+					<h1 class="text-white">
+						XEM ĐIỂM
+					</h1>
+                    <p>
+
+                    </p>
+					<div class="link-nav">
+						<span class="box">
+							<a href="{{ url_for('index') }}">Trang chủ </a>
+							<i class="lnr lnr-arrow-right"></i>
+							<a href="#">Xem điểm</a>
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+</section>
+<div class="container">
+    <h1 class="mb-30">Điểm của bạn</h1>
+    {% for semester, subjects in scores_by_semester.items() %}
+        <h2>{{ semester }} (Điểm trung bình: {{ semester_averages.get(semester, 'N/A') }})</h2>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Môn học</th>
+                    <th>Điểm 15 phút</th>
+                    <th>Điểm 1 tiết</th>
+                    <th>Điểm thi</th>
+                    <th>Điểm trung bình</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for subject, score_types in subjects.items() %}
+                    <tr>
+                        <td>{{ subject }}</td>
+                        <td>{% for score in score_types.get('15 phút', []) %}{{ score }}{% if not loop.last %}, {% endif %}{% endfor %}</td>
+                        <td>{% for score in score_types.get('1 tiết', []) %}{{ score }}{% if not loop.last %}, {% endif %}{% endfor %}</td>
+                        <td>{% for score in score_types.get('Điểm thi', []) %}{{ score }}{% if not loop.last %}, {% endif %}{% endfor %}</td>
+                        <td>{{ score_types.get('Điểm trung bình', 'N/A') }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endfor %}
+</div>
+{% endblock %}

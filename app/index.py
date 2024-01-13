@@ -1,3 +1,4 @@
+import hashlib
 import math
 
 from flask import render_template, request, redirect, url_for, flash
@@ -6,7 +7,7 @@ from app import app, login
 from flask_login import login_user, logout_user, current_user, login_required
 import cloudinary.uploader
 
-from app.models import Class, Teacher, UserRoleEnum
+from app.models import Class, UserRoleEnum, ScoreType, User, Semester
 
 
 @app.route("/")
@@ -80,26 +81,39 @@ def input_scores(class_id, subject_id, semester_id):
     if request.method == 'POST':
         # Lấy thông tin từ form
         student_id = request.form.get('student_id')
-        score_type = request.form.get('score_type')
+        type_id = request.form.get('type_id')
         score_value = request.form.get('score_value')
 
-        message = dao.input_score(student_id=student_id, score_type=score_type, score_value=score_value,
+        message = dao.input_score(student_id=student_id, type_id=type_id, score_value=score_value,
                                   subject_id=subject_id, semester_id=semester_id)
         if message:
             flash(message)
             return redirect(url_for('input_scores', class_id=class_id, subject_id=subject_id, semester_id=semester_id))
-        return redirect(url_for('teacher_dashboard', semester_id=semester_id))
+        return redirect(url_for('input_scores', semester_id=semester_id, class_id=class_id, subject_id=subject_id))
 
     # Lấy danh sách sinh viên trong lớp
-    students = dao.get_students_by_class(class_id)
+    students = dao.get_students_by_class(class_id=class_id)
     semests = dao.get_semester()
-    return render_template('input_scores.html', students=students, semesters=semests)
+    score_types = dao.get_score_type()  # Lấy tất cả các ScoreType
+    return render_template('input_scores.html', students=students, semesters=semests, score_types=score_types)
 
 
 @app.route('/view_scores/<class_id>/<subject_id>/<semester_id>', methods=['GET'])
 def view_scores(class_id, subject_id, semester_id):
     students_scores = dao.get_students_scores(class_id, subject_id, semester_id=semester_id)
     return render_template('view_scores.html', scores=students_scores)
+
+
+@app.route('/student_scores', methods=['GET'])
+def student_scores():
+    if current_user.is_authenticated and current_user.user_role == UserRoleEnum.STUDENT:
+        scores = dao.get_scores(current_user.id)
+        scores_by_semester = dao.get_scores_by_semester(scores)
+        semester_averages = dao.calculate_semester_averages(scores_by_semester)
+    else:
+        return redirect(url_for('user_login'))
+    return render_template('student_scores.html', scores_by_semester=scores_by_semester,
+                           semester_averages=semester_averages)
 
 
 @app.route("/teachers")
@@ -148,7 +162,7 @@ def user_login():
             return redirect(url_for('index'))
         else:
             err_msg = 'Username hoặc password không hợp lệ!!'
-    return render_template('login.html')
+    return render_template('login.html', err_msg=err_msg)
 
 
 @app.route("/user_logout")
@@ -172,6 +186,31 @@ def admin_login():
 @login.user_loader
 def load_user(user_id):
     return dao.get_user_by_id(user_id)
+
+
+@app.route("/change_password", methods=['GET', 'POST'])
+def change_password():
+    if request.method == 'POST':
+        old_password = request.form.get('old_password')
+        new_password = request.form.get('new_password')
+        confirm_password = request.form.get('confirm_password')
+
+        # Assuming 'current_user' is the logged in user
+        hashed_old_password = str(hashlib.md5(old_password.strip().encode('utf-8')).hexdigest())
+
+        if not hashed_old_password == current_user.password:
+            flash('Mật khẩu cũ không chính xác')
+            return redirect(url_for('change_password'))
+
+        if new_password != confirm_password:
+            flash('Mật khẩu mới không khớp')
+            return redirect(url_for('change_password'))
+
+        dao.change_password(current_user, new_password)
+        flash('Mật khẩu đã được thay đổi thành công')
+        return redirect(url_for('index'))
+
+    return render_template('change_password.html')
 
 
 if __name__ == "__main__":

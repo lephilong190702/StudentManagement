@@ -38,10 +38,10 @@
         <tbody>
         {% for s in students %}
         <tr>
-            <th scope="row">{{s.id}}</th>
-            <td>{{s.firstname}}</td>
-            <td>{{s.lastname}}</td>
-            <td>{{s.dob}}</td>
+            <th scope="row">{{s.profile.id}}</th>
+            <td>{{s.profile.firstname}}</td>
+            <td>{{s.profile.lastname}}</td>
+            <td>{{s.profile.dob}}</td>
         </tr>
         {% endfor%}
         </tbody>

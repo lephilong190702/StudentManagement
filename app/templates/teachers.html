@@ -27,18 +27,13 @@
 <div class="container">
     <h3 class="mb-30">Đội ngũ giáo viên</h3>
     <section>
-<!--    <ul class="pagination mt-1">-->
-<!--        <li class="page-item"><a class="page-link" href="/?page=1">1</a></li>-->
-<!--        <li class="page-item"><a class="page-link" href="/?page=2">2</a></li>-->
-<!--    </ul>-->
     <div class="row">
         {% for t in teachers %}
         <div class="col-xs-12 col-md-3" style="padding:7px; ">
             <div class="card">
                 <img class="card-img-top" src="{{ url_for('static', filename='images/default_avatar.jpg') }}" alt="Card image">
                 <div class="card-body">
-                    <h4 class="card-title">{{ t.firstname }} {{ t.lastname }}</h4>
-                    <p class="card-text">{{ t.degree }}</p>
+                    <h4 class="card-title">{{ t.profile.firstname }} {{ t.profile.lastname }}</h4>
                     <a href="#" class="btn btn-info">Xem chi tiết</a>
                 </div>
             </div>

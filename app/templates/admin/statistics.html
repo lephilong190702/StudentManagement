@@ -27,22 +27,18 @@
         <thead>
         <tr>
             <th class="table-light">Lớp</th>
-            <th class="table-light">Môn học</th>
-            <th class="table-light">Học kỳ</th>
             <th class="table-light">Sĩ số</th>
             <th class="table-light">Số lượng đạt</th>
             <th class="table-light">Tỷ lệ</th>
         </tr>
         </thead>
         <tbody>
-        {% for s in statistics %}
+        {% for s in stats %}
         <tr>
-            <td>{{ s['class'] }}</td>
-            <td>{{ s['subject'] }}</td>
-            <td>{{ s['semester'] }}</td>
-            <td>{{ s['num_students'] }}</td>
-            <td>{{ s['num_passed'] }}</td>
-            <td>{{ s['pass_rate'] }} %</td>
+            <td>{{ s.class_name }}</td>
+            <td>{{ s.total_students }}</td>
+            <td>{{ s.number_passed }}</td>
+            <td>{{ s.pass_rate }} %</td>
         </tr>
         {% endfor %}
         </tbody>
@@ -56,9 +52,9 @@
 <script>
     let labels = [], info = []
 
-    {% for s in statistics %}
-        labels.push('{{ s['class'] }}')
-        info.push({{ s['pass_rate'] }})
+    {% for s in stats %}
+        labels.push('{{ s.class_name }}')
+        info.push({{ s.pass_rate }})
     {% endfor %}
     window.onload = function() {
         const ctx = document.getElementById('myChart').getContext('2d');
